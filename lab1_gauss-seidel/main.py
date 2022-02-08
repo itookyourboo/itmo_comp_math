@@ -2,15 +2,36 @@ import io_helper
 import sys
 
 
-def seidel(coefficients, vars, values):
+LIMIT = 5000
+
+
+def is_diagonal_dominant(matrix):
+    n = len(matrix)
+    any_greater = False
+    for i in range(n):
+        diag_elem = matrix[i][i]
+        rest_row_sum = sum(matrix[i][j] for j in range(n) if i != j)
+        if diag_elem < rest_row_sum:
+            return False
+
+        if diag_elem > rest_row_sum:
+            any_greater = True
+
+    return any_greater
+
+
+def converges(vars_old, vars_new, eps):
+    n = len(vars_old)
+    return sum((vars_new[i] - vars_old[i]) ** 2 for i in range(n)) ** 0.5 < eps
+
+
+def seidel_iteration(coefficients, vars, values):
     n = len(coefficients)
+    vars = vars[:]
 
     for i in range(n):
-        d = values[i]
-        for j in range(n):
-            if i != j:
-                d -= coefficients[i][j] * vars[j]
-        vars[i] = d / coefficients[i][i]
+        s = sum(coefficients[i][j] * vars[j] for j in range(n) if i != j)
+        vars[i] = (values[i] - s) / coefficients[i][i]
 
     return vars
 
@@ -20,18 +41,21 @@ def get_delta(coefficients, vars, real_value):
     return abs(res - real_value)
 
 
-LIMIT = 5000
-
-
 def solve(coefficients, values, epsilon):
+    if not is_diagonal_dominant(coefficients):
+        print('Matrix is not diagonal dominant')
+        return
+
     n = len(coefficients)
     x = [0 for _ in range(n)]
 
     for i in range(LIMIT):
-        x = seidel(coefficients, x, values)
-        if get_delta(coefficients[0], x, values[0]) < epsilon:
-            print(x)
+        x_new = seidel_iteration(coefficients, x, values)
+        if converges(x, x_new, epsilon):
+            print(*x_new)
             break
+
+        x = x_new
     else:
         print("Couldn't compute :(")
 
