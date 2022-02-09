@@ -12,10 +12,9 @@ def make_matrix_diagonal_dominance(matrix, values):
             return False
         used[v] = True
 
-        for i in range(len(graph[v])):
-            to = graph[v][i]
-            if mt[to] == -1 or try_kuhn(mt[to]):
-                mt[to] = v
+        for h in graph[v]:
+            if mt[h] == -1 or try_kuhn(mt[h]):
+                mt[h] = v
                 return True
 
         return False
