@@ -39,3 +39,8 @@ def print_matrix(matrix, values):
 
 def print_x_values(x_values, precision):
     print(*list(map(lambda x: round(x, precision), x_values)))
+
+
+def print_errors(x_last, x_current):
+    errors = [abs(x_last[i] - x_current[i]) for i in range(len(x_last))]
+    print(*errors)

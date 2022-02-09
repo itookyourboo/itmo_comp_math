@@ -39,11 +39,14 @@ def solve(coefficients, values, epsilon, precision=PRECISION):
     n = len(coefficients)
     x = [0 for _ in range(n)]
 
-    for i in range(LIMIT):
+    for i in range(1, LIMIT + 1):
         x_new = seidel_iteration(coefficients, x, values)
         if converges(x, x_new, epsilon):
             print('>>> Solution:')
             io_helper.print_x_values(x_new, precision)
+            print('>>> Iterations:', i)
+            print('>>> Errors:')
+            io_helper.print_errors(x, x_new)
             break
 
         x = x_new
