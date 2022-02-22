@@ -18,12 +18,12 @@ def horde_method(f, left, right, fix=-1, eps=10e-3):
     )
     
     x0 = left if fix == -1 else right
-    iteration = 1
-    for i in range(LIMIT):
+
+    for i in range(1, LIMIT + 1):
         x1 = (left * f(right) - right * f(left)) / (f(right) - f(left))
 
         res.data.append([
-            iteration, left, right, x1, f(left), f(right), f(x1), abs(left - right)
+            i, left, right, x1, f(left), f(right), f(x1), abs(left - right)
         ])
 
         if (
@@ -40,7 +40,6 @@ def horde_method(f, left, right, fix=-1, eps=10e-3):
             left = x1
 
         x0 = x1
-        iteration += 1
 
     return res
 
@@ -49,13 +48,12 @@ def newton_method(f, df, x0, eps=10e-3):
     res = Result(
         header="№ x_k f(x_k) f'(x_k) x_{k+1} |x_k-x_{k+1}|".split()
     )
-    
-    iteration = 1
-    for i in range(LIMIT):
+
+    for i in range(1, LIMIT + 1):
         x1 = x0 - f(x0) / df(x0)
 
         res.data.append([
-            iteration, x0, f(x0), df(x0), x1, abs(x1 - x0)
+            i, x0, f(x0), df(x0), x1, abs(x1 - x0)
         ])
 
         if (
@@ -68,7 +66,6 @@ def newton_method(f, df, x0, eps=10e-3):
             break
 
         x0 = x1
-        iteration += 1
 
     return res
 
@@ -77,13 +74,12 @@ def simple_iteration_method(f, phi, x0=1, eps=10e-3):
     res = Result(
         header="№ x_k f(x_k) x_{k+1} phi(x_k) |x_k-x_{k+1}|".split()
     )
-    
-    iteration = 1
-    for i in range(LIMIT):
+
+    for i in range(1, LIMIT + 1):
         x1 = phi(x0)
 
         res.data.append([
-            iteration, x0, f(x0), x1, phi(x0), abs(x1 - x0) 
+            i, x0, f(x0), x1, phi(x0), abs(x1 - x0)
         ])
 
         if (
@@ -94,6 +90,5 @@ def simple_iteration_method(f, phi, x0=1, eps=10e-3):
             break
 
         x0 = x1
-        iteration += 1
 
     return res
