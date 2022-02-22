@@ -13,9 +13,12 @@ def get_table(result):
 
 
 def output(content, file=None):
-    (file.write if file else print)(str(content) + '\n')
+    if file:
+        file.write(str(content) + '\n')
+    else:
+        print(content)
 
 
 def def_input(prompt, def_value=None):
-    v = input(f'{prompt} ({def_value}): ') if def_value else input(f'{prompt}: ')
+    v = input(f'{prompt} ({def_value}): ') if def_value is not None else input(f'{prompt}: ')
     return v if v.strip() else def_value
