@@ -69,9 +69,9 @@ def nonlinear_equation_solver():
     bx = max(abs(lx.root), abs(rx.root)) + 1
     by = abs(f(bx))
 
-    # show_graph(bx, by, f, points=[
-    #     (lx.root, 0), (cx.root, 0), (rx.root, 0)
-    # ])
+    show_graph(bx, by, f, points=[
+        (lx.root, 0), (cx.root, 0), (rx.root, 0)
+    ])
 
     if file:
         file.close()
