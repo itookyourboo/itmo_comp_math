@@ -8,27 +8,56 @@ from integral_solver import (
     normalized_trapeze_method
 )
 
+k = 2
 
-def main():
-    F = lambda x: -x ** 4 / 4 - x ** 3 / 3 - x ** 2 + x
-    f = lambda x: -x ** 3 - x ** 2 - 2 * x + 1
-    k = 2
-    f_str = "-x^3 - x^2 - 2x + 1"
-    I_EXACT = -26 / 3
 
-    print(f'''Выберите метод для вычисления интеграла функции: {f_str}
-    1. Метод левых прямоугольников
-    2. Метод средних прямоугольников
-    3. Метод правых прямоугольников
-    4. Метод трапеций'''
-          )
-    method = int(input())
-    if not 1 <= method <= 4:
+def ask(functions):
+    print('Выберите функцию для интегрирования:')
+    for i, fun in enumerate(functions, 1):
+        print(f"{i}. {fun['s']}")
+
+    fun_i = int(input())
+    if not 1 <= fun_i <= len(functions):
         print('Неверное значение')
-        main()
+        add()
 
+    fun = functions[fun_i - 1]
+    f, F, s = fun['f'], fun['F'], fun['s']
+
+    print(f'''Выберите метод для вычисления интеграла функции: {fun["s"]}
+            1. Метод левых прямоугольников
+            2. Метод средних прямоугольников
+            3. Метод правых прямоугольников
+            4. Метод трапеций'''
+          )
+
+    method = int(input())
     a, b = map(float, input('Введите границы интегрирования через пробел: ').split())
     n = int(input('Введите число разбиений: '))
+
+    return f, F, s, method, a, b, n
+
+
+def main():
+    functions = [
+        {
+            'f': lambda x: -x ** 3 - x ** 2 - 2 * x + 1,
+            'F': lambda x: -x ** 4 / 4 - x ** 3 / 3 - x ** 2 + x,
+            's': '-x^3 - x^2 - 2x + 1'
+        },
+        {
+            'f': lambda x: -4 * x ** 3 - 3 * x ** 2 - 2 * x + 10,
+            'F': lambda x: -x ** 4 - x ** 3 - x ** 2 + 10 * x,
+            's': '-4x^3 - 3x^2 - 2x + 10'
+        },
+        {
+            'f': lambda x: -8 * x ** 3 - 6 * x ** 2 - 4 * x - 8,
+            'F': lambda x: -2 * x ** 4 - 2 * x ** 3 - 2 * x ** 2 - 8 * x,
+            's': '-8x^3 - 6x^2 - 4x - 8'
+        }
+    ]
+
+    f, F, s, method, a, b, n = ask(functions)
     fun = None
     err_f = 0
 
@@ -44,9 +73,8 @@ def main():
     print('Результат вычисления:', res)
     print('Число разбиений:', n)
 
-    if (a, b) == (0, 2):
-        err_abs = abs(I_EXACT - res)
-        print(f'Погрешность: {err_abs:.4f} ({abs(err_abs / I_EXACT):.2f}%)')
+    err_abs = abs(F(b) - F(a) - res)
+    print(f'Погрешность: {err_abs:.4f} ({abs(err_abs / (F(b) - F(a))):.2f}%)')
 
     res2 = err_f()
     err = runge_err(res, res2, k)
@@ -79,32 +107,7 @@ def add():
         },
     ]
 
-    print('Выберите функцию для интегрирования:')
-    for i, fun in enumerate(functions, 1):
-        print(f"{i}. {fun['s']}")
-
-    fun_i = int(input())
-    if not 1 <= fun_i <= len(functions):
-        print('Неверное значение')
-        add()
-
-    fun = functions[fun_i - 1]
-    f, F, s = fun['f'], fun['F'], fun['s']
-
-    print(f'''Выберите метод для вычисления интеграла функции: {fun["s"]}
-        1. Метод левых прямоугольников
-        2. Метод средних прямоугольников
-        3. Метод правых прямоугольников
-        4. Метод трапеций'''
-          )
-
-    method = int(input())
-    if not 1 <= method <= 4:
-        print('Неверное значение')
-        add()
-
-    a, b = map(float, input('Введите границы интегрирования через пробел: ').split())
-    n = int(input('Введите число разбиений: '))
+    f, F, s, method, a, b, n = ask(functions)
     fun = None
 
     match method:
@@ -121,5 +124,5 @@ def add():
 
 
 if __name__ == '__main__':
-    # main()
+    main()
     add()
