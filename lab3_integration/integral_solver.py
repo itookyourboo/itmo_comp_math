@@ -24,8 +24,8 @@ def rect_method(f, a, b, align=0, num=100):
 
 
 def trapeze_method(f, a, b, num=100):
-    h = (a + b) / num
-    arr = np.linspace(a, b, num, endpoint=False)
+    h = (b - a) / num
+    arr = np.linspace(a, b, num, endpoint=False)[1:]
     return h * ((f(a) + f(b)) / 2 + sum(f(x) for x in arr))
 
 
